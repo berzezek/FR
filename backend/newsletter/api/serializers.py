@@ -5,6 +5,7 @@ from ..models import Newsletter, Customer
 class NewsletterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Newsletter
+        # fields = ('id', 'start_launch_date', 'end_launch_date', 'customer_filter', 'message', 'expired_mailing')
         fields = '__all__'
 
 
