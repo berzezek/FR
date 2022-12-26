@@ -28,13 +28,17 @@
 
 <script setup>
 
-import {useCustomersStore} from "~/stores/customers";
-
 // const customersStore = useCustomersStore();
 // customersStore.fetchCustomers();
 // const myCustomer = computed(() => customersStore.customers);
 
-const customerData = ref({})
+const customerData = ref({
+  id: null,
+  phone_number: '',
+  phone_prefix: '',
+  tag: '',
+  customer_time_zone: '',
+})
 
 const customerForm = ref({
   tag: 'add',

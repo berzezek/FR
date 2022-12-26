@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="grid max-w-screen-xl py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12" v-else>
-      <div class="mr-auto place-self-center lg:col-span-6">
+      <div class="place-self-center lg:col-span-6 mr-3">
         <NewsletterTable
             :newsletters="newsletters"
             @addNewsletterDataToForm="addNewsletterDataToForm"
@@ -29,6 +29,7 @@
             @newsletterAdd="newsletterAdd"
             @newsletterEdit="newsletterEdit"
             @newsletterDelete="newsletterDelete"
+            @newsletterLaunch="newsletterLaunch"
             :newsletterData="newsletterData"
             :newsletterForm="newsletterForm"
         />
@@ -41,7 +42,15 @@
 
 <script setup>
 
-const newsletterData = ref({})
+import {useCustomersStore} from "~/stores/customers";
+
+const newsletterData = ref({
+  id: null,
+  start_launch_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+  end_launch_date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' '),
+  customer_filter: '',
+  message: '',
+})
 
 const newsletterForm = ref({
   tag: 'add',
@@ -59,12 +68,12 @@ const refreshNewsletters = () => refreshNuxtData('newsletters')
 
 
 const addNewsletterDataToForm = (val) => {
-  newsletterData.value = val
   newsletterForm.value = {
     tag: 'edit',
     title: 'Редактировать рассылку',
     buttonTitle: 'Изменить',
   }
+  newsletterData.value = val
 }
 
 const newsletterAdd = async () => {
@@ -89,8 +98,8 @@ const newsletterAdd = async () => {
 const changeNewsletterFormToAdd = () => {
   newsletterData.value = {
     id: null,
-    start_launch_date: '',
-    end_launch_date: '',
+    start_launch_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    end_launch_date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' '),
     customer_filter: '',
     message: '',
   }
@@ -101,12 +110,11 @@ const changeNewsletterFormToAdd = () => {
   }
 }
 
-const newsletterEdit = async () => {
-  console.log(newsletterData.value)
+const newsletterEdit = async (val) => {
   await useFetch(`${config.public.BASE_API_URL}newsletter/${newsletterData.value.id}/`,
       {
         method: 'PUT',
-        body: newsletterData.value,
+        body: val,
       });
   await refreshNewsletters();
   changeNewsletterFormToAdd();
@@ -118,6 +126,52 @@ const newsletterDelete = async (id) => {
       {method: 'DELETE'});
   await refreshNewsletters();
   changeNewsletterFormToAdd()
+}
+
+const convertDate = (date) => {
+  return date.toISOString().slice(0, 19).replace('T', ' ')
+}
+
+const newsletterLaunch = async (val) => {
+  const customersStore = useCustomersStore();
+  await customersStore.fetchCustomers();
+  const customers = computed(() => customersStore.customers);
+  const customersFiltered = computed(() => {
+    return customers.value.filter((customer) => {
+      return customer.tag.includes(val.customer_filter)
+    })
+  })
+  for (let customer of customersFiltered.value) {
+    if (val.is_valid) {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDMxNDc4MzMsImlzcyI6ImZhYnJpcXVlIiwibmFtZSI6IkJlcnplemVrIn0.sH0HctX2i1CvsI0E_PlnnHHJL9Ik1BXnsYGXgIuU9dI");
+
+
+      let raw = JSON.stringify({
+        "id": customer.id,
+        "phone": customer.phone_number,
+        "text": val.message,
+      });
+
+      const requestOptions = {
+        method: 'POST',
+        // mode: 'no-cors',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow',
+        withCredentials: false,
+      };
+
+      await useFetch(`https://probe.fbrq.cloud/v1/send/${val.id}`, requestOptions)
+          .then(response => response.text())
+          .then(result => console.log(result))
+          .catch(error => console.log('error', error));
+    }
+
+  }
+
+
 }
 
 </script>
