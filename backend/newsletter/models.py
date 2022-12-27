@@ -14,7 +14,7 @@ class Newsletter(models.Model):
         return int(time.mktime(self.start_launch_date.timetuple())) < time.time() < int(time.mktime(self.end_launch_date.timetuple()))
 
     def __str__(self):
-        return f'{self.start_launch_date} - {self.end_launch_date}'
+        return f'Start date: {self.start_launch_date}, Message: {self.message}'
 
 
 class Customer(models.Model):
@@ -36,7 +36,7 @@ class Customer(models.Model):
 class NewsletterStatistic(models.Model):
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    send_date = models.DateTimeField()
+    send_date = models.DateTimeField(auto_now_add=True)
     is_send = models.BooleanField(default=False)
 
     def __str__(self):

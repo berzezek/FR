@@ -143,30 +143,39 @@ const newsletterLaunch = async (val) => {
   })
   for (let customer of customersFiltered.value) {
     if (val.is_valid) {
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDMxNDc4MzMsImlzcyI6ImZhYnJpcXVlIiwibmFtZSI6IkJlcnplemVrIn0.sH0HctX2i1CvsI0E_PlnnHHJL9Ik1BXnsYGXgIuU9dI");
+      // const myHeaders = new Headers();
+      // myHeaders.append("Content-Type", "application/json");
+      // myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDMxNDc4MzMsImlzcyI6ImZhYnJpcXVlIiwibmFtZSI6IkJlcnplemVrIn0.sH0HctX2i1CvsI0E_PlnnHHJL9Ik1BXnsYGXgIuU9dI");
+      //
+      //
+      // let raw = JSON.stringify({
+      //   "id": customer.id,
+      //   "phone": customer.phone_number,
+      //   "text": val.message,
+      // });
+      //
+      // const requestOptions = {
+      //   method: 'POST',
+      //   headers: myHeaders,
+      //   body: raw,
+      //   redirect: 'follow',
+      //   // withCredentials: false,
+      // };
+      //
+      // await useFetch(`https://probe.fbrq.cloud/v1/send/${val.id}`, requestOptions)
+      //     .then(response => response.text())
+      //     .then(result => console.log(result))
+      //     .catch(error => console.log('error', error));
 
 
-      let raw = JSON.stringify({
-        "id": customer.id,
-        "phone": customer.phone_number,
-        "text": val.message,
-      });
-
-      const requestOptions = {
+      await useFetch(`${config.public.BASE_API_URL}newsletter-statistic/`, {
         method: 'POST',
-        // mode: 'no-cors',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow',
-        withCredentials: false,
-      };
-
-      await useFetch(`https://probe.fbrq.cloud/v1/send/${val.id}`, requestOptions)
-          .then(response => response.text())
-          .then(result => console.log(result))
-          .catch(error => console.log('error', error));
+        body: {
+          id: val.id,
+          customer: customer.id,
+          newsletter: val.id,
+        }
+      })
     }
 
   }
