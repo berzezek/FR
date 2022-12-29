@@ -32,12 +32,10 @@ class Customer(models.Model):
     def __str__(self):
         return self.phone_number
 
+class CustomerStatistic(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    newsletter_statistic = models.ForeignKey('NewsletterStatistic', on_delete=models.CASCADE, related_name='customer_statistic')
 
 class NewsletterStatistic(models.Model):
-    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    send_date = models.DateTimeField(auto_now_add=True)
-    is_send = models.BooleanField(default=False)
+    start_date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'{self.newsletter} - {self.customer}'

@@ -1,13 +1,14 @@
 import json
 
 import redis
-import requests
 from django.conf import settings
 from rest_framework import viewsets
 from rest_framework.response import Response
+from ..tasks import send_delay_to_test_server
 
-from .serializers import NewsletterSerializer, CustomerSerializer, NewsletterStatisticSerializer
-from ..models import Newsletter, Customer, NewsletterStatistic
+from .serializers import NewsletterSerializer, CustomerSerializer, NewsletterStatisticSerializer, \
+    CustomerStatisticSerializer
+from ..models import Newsletter, Customer, NewsletterStatistic, CustomerStatistic
 
 
 class NewsletterViewSet(viewsets.ModelViewSet):
@@ -20,59 +21,52 @@ class CustomerViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
 
 
-def send_to_test_server(url, data):
-    # payload = json.dumps(data)
-    headers = {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDMxNDc4MzMsImlzcyI6ImZhYnJpcXVlIiwibmFtZSI6IkJlcnplemVrIn0.sH0HctX2i1CvsI0E_PlnnHHJL9Ik1BXnsYGXgIuU9dI',
-        'Content-Type': 'application/json'
-    }
-
-    response = requests.request("POST", url, headers=headers, data=data)
-
-    if response.json()['code'] == 0:
-        return True
-    else:
-        return False
-
-
 redis_instance = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0)
+
+
+def send_mess():
+    print('send_mess')
 
 
 class NewsletterStatisticViewSet(viewsets.ModelViewSet):
     queryset = NewsletterStatistic.objects.all()
     serializer_class = NewsletterStatisticSerializer
 
+    # def create(self, request, *args, **kwargs):
+    #     print(request.data)
+    #     r = send_delay_to_test_server
+    #     r.apply_async((
+    #         f'https://probe.fbrq.cloud/v1/send/1',
+    #         json.dumps({
+    #             'id': 1,
+    #             'phone': 123456789,
+    #             'text': 'Hello world',
+    #         })),
+    #         countdown=10, expires=10
+    #     )
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     redis_instance.publish('newsletter', json.dumps(serializer.data))
+    #     return Response(serializer.data, status=201, headers=headers)
+
     # post
     def create(self, request, *args, **kwargs):
-        data = request.data
+        # send newsletter
 
-        # get customer
-        customer = Customer.objects.get(id=data['customer'])
-        # get newsletter
-        newsletter = Newsletter.objects.get(id=data['newsletter'])
-        # print(newsletter.id, customer.get_full_phone_number(), newsletter.message, data["id"])
+        # r = send_delay_to_test_server
+        # r.apply_async((request.data,), countdown=1, expires=10)
+        r = send_delay_to_test_server
+        r.apply_async(('https://probe.fbrq.cloud/v1/send/', request.data), countdown=1, expires=10)
 
-        items = {}
-        count = 0
-        for key in redis_instance.keys():
-            items[key.decode('utf-8')] = redis_instance.get(key).decode('utf-8')
-            count += 1
-        print("items", items)
-        # create statistic
-        is_send = send_to_test_server(
-            url=f'https://probe.fbrq.cloud/v1/send/{newsletter.id}',
-            data=json.dumps({
-                'id': newsletter.id,
-                'phone': customer.phone_number,
-                'text': newsletter.message,
-            }),
-        )
+        # statistic = NewsletterStatistic.objects.create()
+        # # serialize
+        # serializer = NewsletterStatisticSerializer(statistic)
+        # return Response(serializer.data)
+        return Response({'status': 'ok'})
 
-        statistic = NewsletterStatistic.objects.create(
-            customer=customer,
-            newsletter=newsletter,
-            is_send=is_send
-        )
-        # serialize
-        serializer = NewsletterStatisticSerializer(statistic)
-        return Response(serializer.data)
+
+class CustomerStatisticViewSet(viewsets.ModelViewSet):
+    queryset = CustomerStatistic.objects.all()
+    serializer_class = CustomerStatisticSerializer

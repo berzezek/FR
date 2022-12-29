@@ -86,7 +86,7 @@ const newsletterAdd = async () => {
             alert('Ошибка при добавлении клиента')
           } else {
             console.log(response._data)
-            alert(`Рассылка c сообщением: ${response._data.message} - успешно добавлен`)
+            alert(`Рассылка c сообщением: ${response._data.message} - успешно добавлена`)
             refreshNewsletters();
             newsletterData.value = {}
           }
@@ -141,46 +141,20 @@ const newsletterLaunch = async (val) => {
       return customer.tag.includes(val.customer_filter)
     })
   })
-  for (let customer of customersFiltered.value) {
+  // for (let customer of customersFiltered.value) {
     if (val.is_valid) {
-      // const myHeaders = new Headers();
-      // myHeaders.append("Content-Type", "application/json");
-      // myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDMxNDc4MzMsImlzcyI6ImZhYnJpcXVlIiwibmFtZSI6IkJlcnplemVrIn0.sH0HctX2i1CvsI0E_PlnnHHJL9Ik1BXnsYGXgIuU9dI");
-      //
-      //
-      // let raw = JSON.stringify({
-      //   "id": customer.id,
-      //   "phone": customer.phone_number,
-      //   "text": val.message,
-      // });
-      //
-      // const requestOptions = {
-      //   method: 'POST',
-      //   headers: myHeaders,
-      //   body: raw,
-      //   redirect: 'follow',
-      //   // withCredentials: false,
-      // };
-      //
-      // await useFetch(`https://probe.fbrq.cloud/v1/send/${val.id}`, requestOptions)
-      //     .then(response => response.text())
-      //     .then(result => console.log(result))
-      //     .catch(error => console.log('error', error));
-
 
       await useFetch(`${config.public.BASE_API_URL}newsletter-statistic/`, {
         method: 'POST',
         body: {
+          customers: customersFiltered.value,
           id: val.id,
-          customer: customer.id,
           newsletter: val.id,
+          message: val.message,
         }
       })
     }
-
-  }
-
-
+  // }
 }
 
 </script>
