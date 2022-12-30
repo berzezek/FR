@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import Newsletter, Customer, NewsletterStatistic, CustomerStatistic
+from ..models import Newsletter, Customer, NewsletterStatistic
 
 
 class NewsletterSerializer(serializers.ModelSerializer):
@@ -22,19 +22,17 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CustomerStatisticSerializer(serializers.ModelSerializer):
-    # customer = CustomerSerializer()
+class NewsletterStatisticListSerializer(serializers.ModelSerializer):
+    newsletter = NewsletterSerializer(read_only=True)
+    customer_to_send = CustomerSerializer(many=True, read_only=True)
+
     class Meta:
-        model = CustomerStatistic
-        fields = ('customer', 'newsletter_statistic')
+        model = NewsletterStatistic
+        fields = '__all__'
 
 
 class NewsletterStatisticSerializer(serializers.ModelSerializer):
-    customer_statistic = CustomerStatisticSerializer(many=True, read_only=True)
+
     class Meta:
         model = NewsletterStatistic
-        fields = (
-            'id',
-            'start_date',
-            'customer_statistic',
-        )
+        fields = '__all__'

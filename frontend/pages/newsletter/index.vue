@@ -138,22 +138,22 @@ const newsletterLaunch = async (val) => {
   const customers = computed(() => customersStore.customers);
   const customersFiltered = computed(() => {
     return customers.value.filter((customer) => {
-      return customer.tag.includes(val.customer_filter)
+      return customer.tag === val.customer_filter
     })
   })
   // for (let customer of customersFiltered.value) {
-    if (val.is_valid) {
+  if (val.is_valid) {
 
-      await useFetch(`${config.public.BASE_API_URL}newsletter-statistic/`, {
-        method: 'POST',
-        body: {
-          customers: customersFiltered.value,
-          id: val.id,
-          newsletter: val.id,
-          message: val.message,
-        }
-      })
-    }
+    await useFetch(`${config.public.BASE_API_URL}newsletter-statistic/`, {
+      method: 'POST',
+      body: {
+        customers: customersFiltered.value,
+        id: val.id,
+        message: val.message,
+        newsletter: val.id,
+      }
+    })
+  }
   // }
 }
 

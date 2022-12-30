@@ -1,5 +1,4 @@
 import time
-from datetime import date
 
 from django.db import models
 
@@ -11,7 +10,8 @@ class Newsletter(models.Model):
     message = models.TextField()
 
     def is_valid(self):
-        return int(time.mktime(self.start_launch_date.timetuple())) < time.time() < int(time.mktime(self.end_launch_date.timetuple()))
+        return time.mktime(self.start_launch_date.timetuple()) < time.mktime(self.end_launch_date.timetuple()) and \
+               time.time() < int(time.mktime(self.end_launch_date.timetuple()))
 
     def __str__(self):
         return f'Start date: {self.start_launch_date}, Message: {self.message}'
@@ -32,10 +32,10 @@ class Customer(models.Model):
     def __str__(self):
         return self.phone_number
 
-class CustomerStatistic(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    newsletter_statistic = models.ForeignKey('NewsletterStatistic', on_delete=models.CASCADE, related_name='customer_statistic')
 
 class NewsletterStatistic(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
+    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
+    customer_to_send = models.ManyToManyField(Customer, blank=True, related_name='customer_to_send')
+    customer_sent = models.ManyToManyField(Customer, blank=True, related_name='customer_sent')
 

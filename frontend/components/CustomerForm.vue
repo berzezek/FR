@@ -1,13 +1,13 @@
 <template>
 
-  <form @submit.prevent="props.customerForm.tag === 'add' ? customerAdd : customerEdit">
+  <form @submit.prevent="props.customerForm.tag === 'add' ? customerAdd : customerEdit" class="text-gray-500">
     <h2 class="text-gray-500 text-center mb-5">{{ props.customerForm.title }}</h2>
     <div class="grid md:grid-cols-2 md:gap-6">
       <div class="relative z-0 mb-6 w-full group">
         <input type="tel" pattern="[0-9]{3}" name="floating_phone_prefix"
                id="floating_phone_prefix"
                v-model="props.customerData.phone_prefix"
-               class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                placeholder=" " required/>
         <label for="floating_phone_prefix"
                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Код
@@ -16,7 +16,7 @@
       <div class="relative z-0 mb-6 w-full group">
         <input type="tel" pattern="[0-9]{10}" name="floating_phone" id="floating_phone"
                v-model="props.customerData.phone_number"
-               class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+               class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                placeholder=" " required/>
         <label for="floating_phone"
                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Номер
@@ -27,14 +27,14 @@
     <div class="relative z-0 mb-6 group">
       <input type="text" name="floating_tag" id="floating_tag"
              v-model="props.customerData.tag"
-             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+             class="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
              placeholder=" " required/>
       <label for="floating_tag"
              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
         Тег</label>
     </div>
     <div class="relative z-0 mb-6 group">
-      <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an
+      <label for="countries" class="block mb-2 text-sm font-medium dark:text-white">Select an
         option</label>
       <select id="countries"
               v-model="props.customerData.customer_time_zone"

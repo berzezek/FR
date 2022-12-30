@@ -7,7 +7,7 @@ export const useCustomersStore = defineStore({
     }),
     getters: {},
     actions: {
-        async fetchCustomers() {
+        fetchCustomers: async function () {
             const response = await fetch(`http://localhost:8000/api/v1/customer/`);
             this.customers = await response.json();
         }
