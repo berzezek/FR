@@ -1,7 +1,7 @@
 <template>
   <section class="dark:bg-gray-900">
-    <div class="mr-auto place-self-center" v-if="pendingCustomers">
-      Loading...
+    <div class="grid h-screen place-items-center" v-if="pendingCustomers">
+      <MainLoader/>
     </div>
     <div class="grid max-w-screen-xl py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12" v-else>
       <div class="place-self-center lg:col-span-6">

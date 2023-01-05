@@ -8,8 +8,13 @@ export const useCustomersStore = defineStore({
     getters: {},
     actions: {
         fetchCustomers: async function () {
-            const response = await fetch(`http://localhost:8000/api/v1/customer/`);
-            this.customers = await response.json();
+            try {
+                const response = await fetch(`http://localhost:8000/api/v1/customers/`);
+                this.customers = await response.json();
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
     }
 });

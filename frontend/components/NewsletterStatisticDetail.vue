@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div v-if="ns.id">
 
-    <h2 class="my-3 text-center">Детали рассылки - {{ ns.id }}</h2>
-    <div class="overflow-x-auto relative shadow-md sm:rounded-lg mb-12" v-cloak>
+    <h2 class="my-3 text-center" >Детали рассылки - {{ ns.id }}</h2>
+    <div class="overflow-x-auto relative shadow-md sm:rounded-lg mb-8" v-cloak>
 
       <h4 class="text-center mb-2">Клиенты для рассылки</h4>
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -39,7 +39,7 @@
 
         </tbody>
       </table>
-      <h4 class="text-center mb-2">Получили рассылку</h4>
+      <h4 class="text-center mt-8 mb-2">Получили рассылку</h4>
       <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
         >

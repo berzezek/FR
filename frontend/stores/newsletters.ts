@@ -8,8 +8,13 @@ export const useNewslettersStore = defineStore({
     getters: {},
     actions: {
         async fetchNewsletters() {
-            const response = await fetch(`http://localhost:8000/api/v1/newsletter/`);
-            this.newsletters = await response.json();
+            try {
+                const response = await fetch(`http://localhost:8000/api/v1/newsletters/`);
+                this.newsletters = await response.json();
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
     }
 });
