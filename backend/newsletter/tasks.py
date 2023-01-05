@@ -6,10 +6,9 @@ import requests
 
 import redis
 from django.conf import settings
-
 from .models import NewsletterStatistic
 
-redis_instance = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0)
+redis_instance = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0, password=settings.REDIS_PASSWORD)
 
 
 def send_to_test_server(url, data):
@@ -31,24 +30,18 @@ def send_to_test_server(url, data):
         response = requests.request("POST", url, headers=headers, data=payload)
         if response.status_code == 200:
             customer_send.append(i[ 'id' ])
-    redis_instance.set(str(data[ 'id' ]), json.dumps([ 'customer_send', json.dumps(customer_send) ]))
+    redis_instance.hset(str(data[ 'id' ]), 'customer_send', json.dumps(customer_send))
 
 
-def update_customer_send(data):
-    newsletter = NewsletterStatistic.objects.get(id=data[ 'newsletter' ])
-    customer_send = [ ]
-    for key in redis_instance.keys(str(data[ 'newsletter' ])):
-        customer_send.append(redis_instance.get(key))
-    customer_send = list(set(customer_send))
-    newsletter.customer_send = customer_send
-    newsletter.save()
+def update_customer_send(newsletter_id, newsletter_statistic_id):
+    redis_instance = redis.Redis(host='redis-19400.c299.asia-northeast1-1.gce.cloud.redislabs.com', port=19400, db=0,
+                                 password='rdAyjWP6HjpE15dG7K8iMdnKzEC0fMnH')
+    customer_send = redis_instance.hget(newsletter_id, 'customer_send').decode()[ 1:-1 ].split(',')
+    ns = NewsletterStatistic.objects.get(id=newsletter_statistic_id)
+    ns.customer_send.set(customer_send)
 
 
 @shared_task
-def send_newsletter_task(url, data):
+def send_newsletter_task(url, data, newsletter_statistic_id):
     send_to_test_server(url, data)
-
-
-@shared_task
-def update_customer_send_task(data):
-    update_customer_send(data)
+    update_customer_send(data[ 'id' ], newsletter_statistic_id)

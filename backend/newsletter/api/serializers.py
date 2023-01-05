@@ -25,6 +25,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 class NewsletterStatisticListSerializer(serializers.ModelSerializer):
     newsletter = NewsletterSerializer(read_only=True)
     customer_to_send = CustomerSerializer(many=True, read_only=True)
+    customer_send = CustomerSerializer(many=True, read_only=True)
 
     class Meta:
         model = NewsletterStatistic

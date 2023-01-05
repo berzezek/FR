@@ -37,5 +37,5 @@ class NewsletterStatistic(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
     customer_to_send = models.ManyToManyField(Customer, blank=True, related_name='customer_to_send')
-    customer_sent = models.ManyToManyField(Customer, blank=True, related_name='customer_sent')
+    customer_send = models.ManyToManyField(Customer, blank=True, related_name='customer_send')
 

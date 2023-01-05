@@ -11,7 +11,7 @@
             @changeCustomerFormToAdd="changeCustomerFormToAdd"
         />
       </div>
-      <div class="mr-auto place-self-top lg:col-span-6">
+      <div class="mx-auto place-self-top lg:col-span-6">
         <CustomerForm
             @customerAdd="customerAdd"
             @customerEdit="customerEdit"
