@@ -128,20 +128,19 @@ const newsletterLaunch = async (val) => {
       return customer.tag === val.customer_filter
     })
   })
-  // for (let customer of customersFiltered.value) {
   if (val.is_valid) {
-
+    console.log(customersFiltered.value)
     await useFetch(`${config.public.BASE_API_URL}newsletter-statistic/`, {
       method: 'POST',
       body: {
         customers: customersFiltered.value,
-        id: val.id,
-        message: val.message,
         newsletter: val.id,
+        message: val.message
       }
     })
+  } else {
+    alert('Невозможно запустить рассылку, так как дата окончания рассылки меньше текущей даты')
   }
-  // }
 }
 
 </script>

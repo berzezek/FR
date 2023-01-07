@@ -6,7 +6,7 @@ from django.db import models
 class Newsletter(models.Model):
     start_launch_date = models.DateTimeField()
     end_launch_date = models.DateTimeField()
-    customer_filter = models.CharField(max_length=100)
+    customer_filter = models.CharField(max_length=128)
     message = models.TextField()
 
     def is_valid(self):
@@ -18,10 +18,10 @@ class Newsletter(models.Model):
 
 
 class Customer(models.Model):
-    phone_number = models.CharField(max_length=10, unique=True)
-    phone_prefix = models.CharField(max_length=10)
-    tag = models.CharField(max_length=100)
-    customer_time_zone = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=32, unique=True)
+    phone_prefix = models.CharField(max_length=32)
+    tag = models.CharField(max_length=128)
+    customer_time_zone = models.CharField(max_length=128)
 
     def get_phone_number(self):
         return f'7{self.phone_number}'
@@ -34,8 +34,7 @@ class Customer(models.Model):
 
 
 class NewsletterStatistic(models.Model):
-    start_date = models.DateTimeField(auto_now_add=True)
+    customer = models.ManyToManyField(Customer, blank=True, related_name='customers')
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE)
-    customer_to_send = models.ManyToManyField(Customer, blank=True, related_name='customer_to_send')
-    customer_send = models.ManyToManyField(Customer, blank=True, related_name='customer_send')
+    date_of_creation = models.DateTimeField(auto_now_add=True)
 
