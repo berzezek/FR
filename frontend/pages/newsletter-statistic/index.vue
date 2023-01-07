@@ -4,14 +4,14 @@
       <MainLoader/>
     </div>
 
-    <div class="grid max-w-screen-xl py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12" v-else>
+    <div class="grid max-w-screen-xl py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12  mb-5" v-else>
       <div class="place-self-center lg:col-span-6 mr-3">
         <NewsletterStatisticTable
             @viewNewsletterStatisticDetail="viewNewsletterStatisticDetail"
             :newslettersStatistic="newslettersStatistic"
         />
       </div>
-      <div class="place-self-top lg:col-span-6 mr-3">
+      <div class="place-self-top lg:col-span-6 mr-3 md:px-8">
         <NewsletterStatisticDetail
             :ns="ns"
         />

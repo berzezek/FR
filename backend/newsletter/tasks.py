@@ -1,23 +1,38 @@
 from __future__ import absolute_import, unicode_literals
-import json
-
 from celery import shared_task
-import requests
 
 import redis
-from django.conf import settings
+
+import json
+import requests
+
 from .models import NewsletterStatistic
 
-redis_instance = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0, password=settings.REDIS_PASSWORD)
+# redis_instance = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0, password=settings.REDIS_PASSWORD)
+redis_instance = redis.Redis(host='redis', port=6379, db=0)
+
+def create_log(list, newsletter_statistic_id, title, appoint):
+    if len(list) > 0:
+        count = 1
+        file = open(f'logs/{newsletter_statistic_id}-{appoint}.txt', 'w')
+        file.write(f'{title}\n')
+        file.write(f'| # | Код | Номер телефона |\n')
+        for i in list:
+            file.write(f'| {count} | {i[ "phone_prefix" ]} | {i[ "phone_number" ]} |\n')
+            count += 1
+        file.write(f'-----------\nВсего: {count - 1}')
+        file.close()
 
 
-def send_to_test_server(url, data):
-    url += str(data[ 'id' ])
-    customer_send = [ ]
-    for i in data[ 'customers' ]:
+def send_to_test_server(url, data, newsletter_statistic_id):
+    print(data)
+    url += str(data[ 'newsletter' ])
+    customer_received_list = [ ]
+    customer_unreceived_list = [ ]
+    for customer in data[ 'customers' ]:
         payload = json.dumps({
-            'id': data[ 'id' ],
-            'phone': i[ 'phone_number' ],
+            'id': data[ 'newsletter' ],
+            'phone': customer[ 'phone_number' ],
             'text': data[ 'message' ],
         })
         headers = {
@@ -28,20 +43,27 @@ def send_to_test_server(url, data):
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
-        if response.status_code == 200:
-            customer_send.append(i[ 'id' ])
-    redis_instance.hset(str(data[ 'id' ]), 'customer_send', json.dumps(customer_send))
+        if response.json()[ 'code' ] == 0:
+            customer_received_list.append(customer)
+        else:
+            customer_unreceived_list.append(customer)
+    redis_instance.hset(newsletter_statistic_id, 'customer_received_list', json.dumps(customer_received_list))
+
+    # создаем логи
+    create_log(customer_received_list, newsletter_statistic_id, 'Получили сообщение', 'received')
+    create_log(customer_unreceived_list, newsletter_statistic_id, 'Не получили сообщение', 'unreceived')
 
 
-def update_customer_send(newsletter_id, newsletter_statistic_id):
-    redis_instance = redis.Redis(host='redis-19400.c299.asia-northeast1-1.gce.cloud.redislabs.com', port=19400, db=0,
-                                 password='rdAyjWP6HjpE15dG7K8iMdnKzEC0fMnH')
-    customer_send = redis_instance.hget(newsletter_id, 'customer_send').decode()[ 1:-1 ].split(',')
-    ns = NewsletterStatistic.objects.get(id=newsletter_statistic_id)
-    ns.customer_send.set(customer_send)
+def update_customer_received_list(newsletter_statistic_id):
+    customer_received_str = redis_instance.hget(newsletter_statistic_id, 'customer_received_list').decode()
+    customer_received_list = json.loads(customer_received_str)
+    if len(customer_received_list) > 0:
+        ns = NewsletterStatistic.objects.get(id=newsletter_statistic_id)
+        for customer in customer_received_list:
+            ns.customer.add(customer[ 'id' ])
 
 
 @shared_task
 def send_newsletter_task(url, data, newsletter_statistic_id):
-    send_to_test_server(url, data)
-    update_customer_send(data[ 'id' ], newsletter_statistic_id)
+    send_to_test_server(url, data, newsletter_statistic_id)
+    update_customer_received_list(newsletter_statistic_id)

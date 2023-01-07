@@ -28,9 +28,6 @@ class NewsletterStatisticViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        request.data[ 'customer_to_send' ] = [ ]
-        for i in request.data[ 'customers' ]:
-            request.data[ 'customer_to_send' ].append(i[ 'id' ])
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -47,6 +44,7 @@ class NewsletterStatisticViewSet(viewsets.ModelViewSet):
         if expires < 0:
             return Response({'error': 'End launch date is in the past'})
 
-        send_newsletter_task.apply_async(('https://probe.fbrq.cloud/v1/send/', request.data, newsletter_statistic_id), countdown=countdown, expires=expires)
+        send_newsletter_task.apply_async(
+            ('https://probe.fbrq.cloud/v1/send/', request.data, newsletter_statistic_id), countdown=countdown,
+                                         expires=expires)
         return Response(serializer.data, status=201)
-
