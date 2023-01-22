@@ -11,7 +11,7 @@
             :newslettersStatistic="newslettersStatistic"
         />
       </div>
-      <div class="place-self-top lg:col-span-6 mr-3 md:px-8">
+      <div class="mx-auto place-self-top lg:col-span-6">
         <NewsletterStatisticDetail
             :ns="ns"
         />
@@ -24,12 +24,13 @@
 
 <script setup>
 
-const config = useRuntimeConfig()
+import {useNewslettersStatisticStore} from "~/stores/newslettersStatistic";
+const newslettersStatisticStore = useNewslettersStatisticStore();
+newslettersStatisticStore.fetchNewslettersStatistic();
 
-const {
-  pending: pendingNewslettersStatistic,
-  data: newslettersStatistic
-} = await useLazyAsyncData('newslettersStatistic', () => $fetch(`${config.public.BASE_API_URL}newsletter-statistic/`))
+const newslettersStatistic = computed(() => newslettersStatisticStore.newslettersStatistic);
+const pendingNewslettersStatistic = computed(() => newslettersStatisticStore.pendingNewslettersStatistic);
+
 
 const ns = ref({})
 

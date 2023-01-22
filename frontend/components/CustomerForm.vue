@@ -43,31 +43,47 @@
         <option v-for="timezone in timezones" :value="timezone">{{ timezone }}</option>
       </select>
     </div>
+    <div class="flex">
+      <div v-if="props.customerForm.tag === 'add'">
+        <button
 
-    <button
-        v-if="props.customerForm.tag === 'add'"
-        @click="customerAdd"
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-      {{ props.customerForm.buttonTitle }}
-    </button>
-    <div v-else-if="props.customerForm.tag === 'edit'">
-      <button
+            @click="customerAdd"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          {{ props.customerForm.buttonTitle }}
+        </button>
 
-          @click="customerEdit"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        {{ props.customerForm.buttonTitle }}
-      </button>
-      <button
-          @click="customerDelete"
-          class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 ml-3">
-        Удалить
-      </button>
+      </div>
+
+      <div v-else-if="props.customerForm.tag === 'edit'">
+        <button
+
+            @click="customerEdit"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          {{ props.customerForm.buttonTitle }}
+        </button>
+        <button
+            @click="customerDelete"
+            class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 ml-3">
+          Удалить
+        </button>
+
+      </div>
+      <div>
+        <button
+            @click="clearForm"
+            class="text-white bg-yellow-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800 ml-3">
+          Очистить
+        </button>
+      </div>
     </div>
 
   </form>
 </template>
 
 <script setup>
+
+import {timezones} from "~/mixins/timezones";
+
 const props = defineProps({
   customerData: {
     type: Object,
@@ -86,7 +102,7 @@ const props = defineProps({
     default: () => ({
       tag: 'add',
       title: '',
-      buttonTitle: '',
+      buttonTitle: 'Создать',
     }),
   },
 })
@@ -94,13 +110,6 @@ const props = defineProps({
 const customerData = ref({
   ...props.customerData,
 })
-
-const timezones = [
-  'Europe/London',
-  'Europe/Paris',
-  'Europe/Berlin',
-  'Europe/Moscow',
-]
 
 const emit = defineEmits(['customerAdd', 'customerEdit', 'customerDelete'])
 
@@ -116,6 +125,9 @@ const customerDelete = () => {
   emit('customerDelete', props.customerData.id)
 }
 
+const clearForm = () => {
+  emit('clearForm')
+}
 
 </script>
 

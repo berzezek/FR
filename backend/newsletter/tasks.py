@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
+import logging
 
 import redis
 
@@ -8,27 +9,16 @@ import requests
 
 from .models import NewsletterStatistic
 
-# redis_instance = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0, password=settings.REDIS_PASSWORD)
 redis_instance = redis.Redis(host='redis', port=6379, db=0)
 
-def create_log(list, newsletter_statistic_id, title, appoint):
-    if len(list) > 0:
-        count = 1
-        file = open(f'logs/{newsletter_statistic_id}-{appoint}.txt', 'w')
-        file.write(f'{title}\n')
-        file.write(f'| # | Код | Номер телефона |\n')
-        for i in list:
-            file.write(f'| {count} | {i[ "phone_prefix" ]} | {i[ "phone_number" ]} |\n')
-            count += 1
-        file.write(f'-----------\nВсего: {count - 1}')
-        file.close()
+logger = logging.getLogger(__name__)
 
 
 def send_to_test_server(url, data, newsletter_statistic_id):
-    print(data)
     url += str(data[ 'newsletter' ])
     customer_received_list = [ ]
     customer_unreceived_list = [ ]
+    logger.info(f'starting logs newsletter {newsletter_statistic_id}\n------------------\n')
     for customer in data[ 'customers' ]:
         payload = json.dumps({
             'id': data[ 'newsletter' ],
@@ -42,16 +32,20 @@ def send_to_test_server(url, data, newsletter_statistic_id):
             'Content-Type': 'application/json'
         }
 
-        response = requests.request("POST", url, headers=headers, data=payload)
-        if response.json()[ 'code' ] == 0:
-            customer_received_list.append(customer)
-        else:
+        try:
+            response = requests.request("POST", url, headers=headers, data=payload)
+            if response.json()[ 'code' ] == 0:
+                customer_received_list.append(customer)
+                logger.info(f'Customer {customer} received')
+            else:
+                customer_unreceived_list.append(customer)
+                logger.warning(f'Customer {customer} unreceived')
+        except Exception as e:
+            logger.error(e)
             customer_unreceived_list.append(customer)
-    redis_instance.hset(newsletter_statistic_id, 'customer_received_list', json.dumps(customer_received_list))
 
-    # создаем логи
-    create_log(customer_received_list, newsletter_statistic_id, 'Получили сообщение', 'received')
-    create_log(customer_unreceived_list, newsletter_statistic_id, 'Не получили сообщение', 'unreceived')
+        redis_instance.hset(newsletter_statistic_id, 'customer_received_list', json.dumps(customer_received_list))
+    logger.info(f'------------------\nnewsletter {newsletter_statistic_id} end sending logs\n')
 
 
 def update_customer_received_list(newsletter_statistic_id):

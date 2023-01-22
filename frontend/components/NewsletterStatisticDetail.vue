@@ -1,6 +1,6 @@
 <template>
   <div v-if="ns.id">
-    <h2 class="my-3 text-center">Детали рассылки - {{ ns.id }} ({{ ns.date_of_creation }})</h2>
+    <h2 class="my-3 text-center">Детали рассылки - {{ ns.id }} ({{ convertDate(ns.date_of_creation) }})</h2>
     <div class="overflow-x-auto relative shadow-md sm:rounded-lg mb-8" v-cloak>
 
       <div v-if="ns.customer.length">
@@ -48,11 +48,13 @@
 </template>
 
 <script setup lang="ts">
+
+import {useCustomersStore} from "~/stores/customers";
+import { convertDate } from "~/mixins/convertDate";
+
 const props = defineProps<{
   ns: any;
 }>();
-
-import {useCustomersStore} from "~/stores/customers";
 
 const customersStore = useCustomersStore();
 customersStore.fetchCustomers();

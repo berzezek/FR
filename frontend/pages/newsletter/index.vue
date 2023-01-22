@@ -16,9 +16,10 @@
             @newsletterAdd="newsletterAdd"
             @newsletterEdit="newsletterEdit"
             @newsletterDelete="newsletterDelete"
-            @newsletterLaunch="newsletterLaunch"
             :newsletterData="newsletterData"
             :newsletterForm="newsletterForm"
+            @newsletterLaunch="newsletterLaunch"
+            @clearForm="changeNewsletterFormToAdd"
         />
       </div>
     </div>
@@ -30,6 +31,12 @@
 <script setup>
 
 import {useCustomersStore} from "~/stores/customers";
+import {useNewslettersStore} from "~/stores/newsletters";
+
+const newslettersStore = useNewslettersStore();
+newslettersStore.fetchNewsletters();
+const newsletters = computed(() => newslettersStore.newsletters)
+const pendingNewsletters = computed(() => newslettersStore.pendingNewsletters)
 
 const newsletterData = ref({
   id: null,
@@ -47,39 +54,18 @@ const newsletterForm = ref({
 
 const config = useRuntimeConfig()
 
-const {
-  pending: pendingNewsletters,
-  data: newsletters
-} = await useLazyAsyncData('newsletters', () => $fetch(`${config.public.BASE_API_URL}newsletter/`))
-const refreshNewsletters = () => refreshNuxtData('newsletters')
-
-
 const addNewsletterDataToForm = (val) => {
+  newsletterData.value = val
   newsletterForm.value = {
     tag: 'edit',
     title: 'Редактировать рассылку',
     buttonTitle: 'Изменить',
   }
-  newsletterData.value = val
 }
 
 const newsletterAdd = async () => {
-  await useFetch(`${config.public.BASE_API_URL}newsletter/`,
-      {
-        method: 'POST',
-        body: newsletterData.value,
-        onResponse({request, response, options}) {
-          if (response.status !== 201) {
-            alert('Ошибка при добавлении клиента')
-          } else {
-            console.log(response._data)
-            alert(`Рассылка c сообщением: ${response._data.message} - успешно добавлена`)
-            refreshNewsletters();
-            newsletterData.value = {}
-          }
-        }
-      },
-  )
+  newslettersStore.addNewsletter(newsletterData.value)
+  newslettersStore.fetchNewsletters()
 }
 
 const changeNewsletterFormToAdd = () => {
@@ -97,26 +83,14 @@ const changeNewsletterFormToAdd = () => {
   }
 }
 
-const newsletterEdit = async (val) => {
-  await useFetch(`${config.public.BASE_API_URL}newsletter/${newsletterData.value.id}/`,
-      {
-        method: 'PUT',
-        body: val,
-      });
-  await refreshNewsletters();
-  changeNewsletterFormToAdd();
+const newsletterEdit = async () => {
+  newslettersStore.updateNewsletter(newsletterData.value)
+  newslettersStore.fetchNewsletters()
 }
 
 const newsletterDelete = async (id) => {
-  console.log(id)
-  await useFetch(`${config.public.BASE_API_URL}newsletter/${id}/`,
-      {method: 'DELETE'});
-  await refreshNewsletters();
-  changeNewsletterFormToAdd()
-}
-
-const convertDate = (date) => {
-  return date.toISOString().slice(0, 19).replace('T', ' ')
+  await newslettersStore.deleteNewsletter(id)
+  await newslettersStore.fetchNewsletters()
 }
 
 const newsletterLaunch = async (val) => {
@@ -129,15 +103,7 @@ const newsletterLaunch = async (val) => {
     })
   })
   if (val.is_valid) {
-    console.log(customersFiltered.value)
-    await useFetch(`${config.public.BASE_API_URL}newsletter-statistic/`, {
-      method: 'POST',
-      body: {
-        customers: customersFiltered.value,
-        newsletter: val.id,
-        message: val.message
-      }
-    })
+    newslettersStore.launchNewsletter(val.id, customersFiltered.value, val.message)
   } else {
     alert('Невозможно запустить рассылку, так как дата окончания рассылки меньше текущей даты')
   }
