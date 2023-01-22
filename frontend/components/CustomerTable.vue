@@ -4,7 +4,6 @@
     <h3 class="text-center mb-2">Список клиентов</h3>
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-             @click="changeCustomerFormToAdd">
       <tr>
         <th scope="col" class="py-3 px-6">
           Номер телефона
@@ -55,15 +54,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['addCustomerDataToForm', 'changeCustomerFormToAdd'])
+const emit = defineEmits(['addCustomerDataToForm'])
 
 const addCustomerDataToForm = (customer: any) => {
   emit('addCustomerDataToForm', customer)
 }
 
-const changeCustomerFormToAdd = () => {
-  emit('changeCustomerFormToAdd')
-}
 </script>
 
 <style scoped>

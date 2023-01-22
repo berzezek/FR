@@ -13,7 +13,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.environ.get('DJANGO_ALLOWED_HOSTS')]
+ALLOWED_HOSTS = [ os.environ.get('DJANGO_ALLOWED_HOSTS') ]
 
 # Application definition
 
@@ -144,4 +144,37 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Tashkent'
 CELERY_TASK_TRACK_STARTED = True
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        }
+    },
+    'handlers': {
+        'django_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': './logs/debug.log',
+            'formatter': 'verbose'
+        },
+        'newsletter_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': './logs/newsletters.log',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['django_file'],
+            'level': 'INFO',
+        },
+        'newsletter.tasks': {
+            'handlers': ['newsletter_file'],
+            'level': 'INFO',
+        },
+    }
+}
