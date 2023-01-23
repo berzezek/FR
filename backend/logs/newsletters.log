@@ -1,0 +1,26 @@
+INFO 2023-01-22 17:39:52,730 tasks 14 140010050071368 
+|->-----------------
+Starting logs newsletter 49
+
+INFO 2023-01-22 17:39:52,784 tasks 14 140010050071368 
+Ending logs newsletter 49/n-----------------<-|
+
+INFO 2023-01-22 17:42:25,924 tasks 15 140393304300360 
+|->-----------------
+Starting logs newsletter 50
+
+INFO 2023-01-22 17:42:25,928 tasks 15 140393304300360 'NoneType' object has no attribute 'decode', 
+*Maybe customer_received_list is empty
+
+INFO 2023-01-22 17:42:25,929 tasks 15 140393304300360 
+Ending logs newsletter 50/n-----------------<-|
+
+INFO 2023-01-22 17:44:25,056 tasks 15 140393304300360 
+|->-----------------
+Starting logs newsletter 51
+
+INFO 2023-01-22 17:44:25,633 tasks 15 140393304300360 Customer {'id': 6, 'phone_number': '002', 'phone_prefix': '123', 'tag': 'Bar', 'customer_time_zone': 'Europe/Berlin'} received
+INFO 2023-01-22 17:44:26,053 tasks 15 140393304300360 Customer {'id': 7, 'phone_number': '003', 'phone_prefix': '123', 'tag': 'Foo', 'customer_time_zone': 'Europe/Paris'} received
+INFO 2023-01-22 17:44:26,123 tasks 15 140393304300360 
+Ending logs newsletter 51/n-----------------<-|
+

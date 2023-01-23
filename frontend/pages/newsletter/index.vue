@@ -13,11 +13,11 @@
       </div>
       <div class="mx-auto place-self-top lg:col-span-6">
         <NewsletterForm
+            :newsletterData="newsletterData"
+            :newsletterForm="newsletterForm"
             @newsletterAdd="newsletterAdd"
             @newsletterEdit="newsletterEdit"
             @newsletterDelete="newsletterDelete"
-            :newsletterData="newsletterData"
-            :newsletterForm="newsletterForm"
             @newsletterLaunch="newsletterLaunch"
             @clearForm="changeNewsletterFormToAdd"
         />

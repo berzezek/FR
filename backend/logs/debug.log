@@ -1,0 +1,26 @@
+INFO 2023-01-22 17:38:52,394 autoreload 13 139853555063624 /backend/newsletter/tasks.py changed, reloading.
+INFO 2023-01-22 17:38:54,425 autoreload 15 140423681416008 Watching for file changes with StatReloader
+INFO 2023-01-22 17:39:27,856 autoreload 9 140616469273416 Watching for file changes with StatReloader
+INFO 2023-01-22 17:39:52,644 basehttp 9 140616402598712 "POST /api/v1/newsletter-statistic/ HTTP/1.1" 201 87
+INFO 2023-01-22 17:40:27,772 autoreload 9 140616469273416 /backend/newsletter/tasks.py changed, reloading.
+INFO 2023-01-22 17:40:29,561 autoreload 13 140268655700808 Watching for file changes with StatReloader
+INFO 2023-01-22 17:40:59,140 autoreload 13 140268655700808 /backend/newsletter/tasks.py changed, reloading.
+INFO 2023-01-22 17:41:01,170 autoreload 15 140189885004616 Watching for file changes with StatReloader
+INFO 2023-01-22 17:41:46,174 autoreload 9 140641740577608 Watching for file changes with StatReloader
+INFO 2023-01-22 17:42:25,855 basehttp 9 140641674963768 "POST /api/v1/newsletter-statistic/ HTTP/1.1" 201 87
+INFO 2023-01-22 17:44:25,060 basehttp 9 140641674963768 "POST /api/v1/newsletter-statistic/ HTTP/1.1" 201 87
+INFO 2023-01-22 17:45:00,653 autoreload 9 140641740577608 /backend/newsletter/tasks.py changed, reloading.
+INFO 2023-01-22 17:45:02,978 autoreload 13 140233028262728 Watching for file changes with StatReloader
+INFO 2023-01-23 04:34:31,888 basehttp 13 140232962681656 "GET /api/v1/customer/ HTTP/1.1" 200 205
+INFO 2023-01-23 04:35:27,642 basehttp 13 140232962681656 "GET /api/v1/customer/ HTTP/1.1" 200 205
+INFO 2023-01-23 04:35:33,231 basehttp 13 140232962681656 "GET /api/v1/customer/ HTTP/1.1" 200 205
+INFO 2023-01-23 04:37:36,779 basehttp 13 140232962681656 "GET /api/v1/customer/ HTTP/1.1" 200 205
+INFO 2023-01-23 04:39:35,634 basehttp 13 140232962681656 "GET /api/v1/customer/ HTTP/1.1" 200 205
+WARNING 2023-01-23 04:39:35,712 log 13 140232962681656 Bad Request: /api/v1/newsletter-statistic/
+WARNING 2023-01-23 04:39:35,714 basehttp 13 140232962681656 "POST /api/v1/newsletter-statistic/ HTTP/1.1" 400 109
+INFO 2023-01-23 04:39:58,045 basehttp 13 140232962681656 "GET /api/v1/customer/ HTTP/1.1" 200 205
+WARNING 2023-01-23 04:39:58,135 log 13 140232962681656 Bad Request: /api/v1/newsletter-statistic/
+WARNING 2023-01-23 04:39:58,136 basehttp 13 140232962681656 "POST /api/v1/newsletter-statistic/ HTTP/1.1" 400 109
+INFO 2023-01-23 04:40:14,042 basehttp 13 140232962681656 "GET /api/v1/customer/ HTTP/1.1" 200 205
+WARNING 2023-01-23 04:40:14,103 log 13 140232962681656 Bad Request: /api/v1/newsletter-statistic/
+WARNING 2023-01-23 04:40:14,104 basehttp 13 140232962681656 "POST /api/v1/newsletter-statistic/ HTTP/1.1" 400 109

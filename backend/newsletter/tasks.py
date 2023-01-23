@@ -18,7 +18,7 @@ def send_to_test_server(url, data, newsletter_statistic_id):
     url += str(data[ 'newsletter' ])
     customer_received_list = [ ]
     customer_unreceived_list = [ ]
-    logger.info(f'starting logs newsletter {newsletter_statistic_id}\n------------------\n')
+    logger.info(f'\n|->-----------------\nStarting logs newsletter {newsletter_statistic_id}\n')
     for customer in data[ 'customers' ]:
         payload = json.dumps({
             'id': data[ 'newsletter' ],
@@ -45,16 +45,20 @@ def send_to_test_server(url, data, newsletter_statistic_id):
             customer_unreceived_list.append(customer)
 
         redis_instance.hset(newsletter_statistic_id, 'customer_received_list', json.dumps(customer_received_list))
-    logger.info(f'------------------\nnewsletter {newsletter_statistic_id} end sending logs\n')
 
 
 def update_customer_received_list(newsletter_statistic_id):
-    customer_received_str = redis_instance.hget(newsletter_statistic_id, 'customer_received_list').decode()
-    customer_received_list = json.loads(customer_received_str)
-    if len(customer_received_list) > 0:
-        ns = NewsletterStatistic.objects.get(id=newsletter_statistic_id)
-        for customer in customer_received_list:
-            ns.customer.add(customer[ 'id' ])
+    try:
+        customer_received_str = redis_instance.hget(newsletter_statistic_id, 'customer_received_list').decode()
+        customer_received_list = json.loads(customer_received_str)
+        if len(customer_received_list) > 0:
+            ns = NewsletterStatistic.objects.get(id=newsletter_statistic_id)
+            for customer in customer_received_list:
+                ns.customer.add(customer[ 'id' ])
+            ns.save()
+    except Exception as e:
+        logger.info(f'{e}, \n*Maybe customer_received_list is empty\n')
+    logger.info(f'\n\n\nEnding logs newsletter {newsletter_statistic_id}/n-----------------<-|\n')
 
 
 @shared_task
