@@ -6,8 +6,8 @@ import redis
 
 import json
 import requests
+from .services import update_customer_list
 
-from .models import NewsletterStatistic
 
 redis_instance = redis.Redis(host='redis', port=6379, db=0)
 
@@ -52,10 +52,7 @@ def update_customer_received_list(newsletter_statistic_id):
         customer_received_str = redis_instance.hget(newsletter_statistic_id, 'customer_received_list').decode()
         customer_received_list = json.loads(customer_received_str)
         if len(customer_received_list) > 0:
-            ns = NewsletterStatistic.objects.get(id=newsletter_statistic_id)
-            for customer in customer_received_list:
-                ns.customer.add(customer[ 'id' ])
-            ns.save()
+            update_customer_list(customer_received_list, newsletter_statistic_id)
     except Exception as e:
         logger.info(f'{e}, \n*Maybe customer_received_list is empty\n')
     logger.info(f'\n\n\nEnding logs newsletter {newsletter_statistic_id}/n-----------------<-|\n')
