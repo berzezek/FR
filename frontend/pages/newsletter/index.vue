@@ -78,7 +78,7 @@ const changeNewsletterFormToAdd = () => {
   }
   newsletterForm.value = {
     tag: 'add',
-    title: 'Добавить клиента',
+    title: 'Добавить рассылку',
     buttonTitle: 'Создать',
   }
 }

@@ -1,5 +1,5 @@
 from django.utils import timezone
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from ..tasks import send_newsletter_task
 
@@ -11,16 +11,18 @@ from ..models import Newsletter, Customer, NewsletterStatistic
 class NewsletterViewSet(viewsets.ModelViewSet):
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
+    permission_classes = [permissions.AllowAny]
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-
+    permission_classes = [permissions.AllowAny]
 
 class NewsletterStatisticViewSet(viewsets.ModelViewSet):
     queryset = NewsletterStatistic.objects.all()
     serializer_class = NewsletterStatisticSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
