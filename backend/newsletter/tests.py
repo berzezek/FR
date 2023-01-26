@@ -1,7 +1,9 @@
-from django.test import TestCase
-from .models import Newsletter, Customer, NewsletterStatistic
-from django.utils import timezone
 import logging
+
+from django.test import TestCase
+from django.utils import timezone
+
+from .models import Newsletter, Customer, NewsletterStatistic
 
 logger = logging.getLogger(__name__)
 
@@ -64,4 +66,3 @@ class NewsletterStatisticModelTests(TestCase):
         ns = NewsletterStatistic.objects.get(id=1)
         self.assertEqual(ns.customer.count(), 1)
         self.assertEqual(ns.newsletter.message, 'test')
-

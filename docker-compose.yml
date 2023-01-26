@@ -19,6 +19,7 @@ services:
     depends_on:
       - db
       - redis
+#      - sqlite3
 
   frontend:
     build:
@@ -39,6 +40,12 @@ services:
       - ./.env.dev
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+#  sqlite3:
+#    image: nouchka/sqlite3:latest
+#    restart: always
+#    volumes:
+#      - ./test.backend:/backend/test.sqlite3
 
   adminer:
     image: adminer
@@ -67,3 +74,4 @@ services:
 
 volumes:
   pgdata:
+#  test.sqlite3:
