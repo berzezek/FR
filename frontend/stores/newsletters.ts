@@ -1,6 +1,8 @@
 import {defineStore} from "pinia";
 import {ICustomer, INewsletter} from "~/types";
 const BASE_API_URL = 'http://localhost:8000/api/v1/';
+import {getCookie} from "~/mixins/cookieOperations";
+
 
 export const useNewslettersStore = defineStore({
     id: "newsletters",
@@ -71,16 +73,30 @@ export const useNewslettersStore = defineStore({
             }
         },
         async launchNewsletter(id: Number | String, customersFiltered: ICustomer[], message: String) {
-            alert("Рассылка запущена");
-            await useFetch(`${BASE_API_URL}newsletter-statistic/`, {
-                method: 'POST',
-                body: {
-                    newsletter: id,
-                    customers: customersFiltered,
-                    message: message
+            const router = useRouter()
+            try {
+                const response = await useFetch(`${BASE_API_URL}newsletter-statistic/`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${getCookie('token')}`
+                    },
+                    method: 'POST',
+                    body: {
+                        newsletter: id,
+                        customers: customersFiltered,
+                        message: message
+                    }
+                });
+                if (response.error.value) {
+                    alert("Требуется авторизация");
+                    router.push('/login');
+                } else {
+                    alert("Рассылка запущена");
                 }
-            })
-
+            }
+            catch (error) {
+                console.log(error);
+            }
         }
     }
 });
