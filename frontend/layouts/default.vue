@@ -1,11 +1,11 @@
 <template>
-<div class="text-gray-500">
+  <div class="text-gray-500">
 
-  <MainNav />
-  <slot />
-  <MainFooter />
+    <MainNav/>
+    <slot/>
+    <MainFooter/>
 
-</div>
+  </div>
 
 </template>
 

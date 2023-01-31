@@ -1,0 +1,55 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+    <h2 class="text-center text-4xl">Регистрация</h2>
+    {{ error }}
+    <form method="post" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="fieldWrapper mb-3">
+            {{ form.username.errors }}
+            <label for="{{ form.username.id_for_label }}" class="ml-3">Логин:</label>
+            {{ form.username }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.password1.errors }}
+            <label for="{{ form.password1.id_for_label }}" class="ml-3">Пароль:</label>
+            {{ form.password1 }}
+        </div>
+        <button type="submit"
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-5">
+            Регистрация
+        </button>
+    </form>
+    <p class="text-center text-gray-500 text-xs">
+        &copy;2022 Test OAUTH server.
+    </p>
+
+    <div class="mt-5">
+        <h3 class="text-center text-2xl my-3">Зарегистрированные пользователи</h3>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Username
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ user.username }}
+                        </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+{% endblock %}
