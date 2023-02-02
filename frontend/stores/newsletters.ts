@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {ICustomer, INewsletter} from "~/types";
-const BASE_API_URL = 'http://localhost:8000/api/v1/';
+import {BASE_API_URL} from "~/utils/constants";
 import {getCookie} from "~/mixins/cookieOperations";
 
 

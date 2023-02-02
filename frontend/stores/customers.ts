@@ -1,7 +1,6 @@
 import {defineStore} from "pinia";
 import {ICustomer} from "~/types";
-
-const BASE_API_URL = 'http://localhost:8000/api/v1/';
+import {BASE_API_URL} from "~/utils/constants";
 
 export const useCustomersStore = defineStore({
     id: "customers",

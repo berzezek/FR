@@ -1,8 +1,7 @@
 import {defineStore} from "pinia";
 import {INewsletterStatistic} from "~/types";
 import {getCookie} from "~/mixins/cookieOperations";
-
-const BASE_API_URL = 'http://localhost:8000/api/v1/';
+import {BASE_API_URL} from "~/utils/constants";
 
 export const useNewslettersStatisticStore = defineStore({
     id: "newslettersStatistic",

@@ -5,7 +5,7 @@ export interface ICustomer {
     tag: string
 }
 
-export  interface  INewsletter {
+export interface INewsletter {
     id: string | number,
     start_launch_date: string,
     end_launch_date: string,
@@ -14,16 +14,24 @@ export  interface  INewsletter {
     is_valid: boolean,
 }
 
-export  interface  INewsletterStatistic {
+export interface INewsletterStatistic {
     id: string | number,
     newsletter: string,
     customer: string,
     date_of_creation: string,
 }
 
-export  interface  IUser {
+export interface IUser {
     id: string | number,
     username: string,
     email: string,
     password: string,
+}
+
+export interface IResponseOauth {
+    access_token: string,
+    refresh_token: string,
+    expires_in: number,
+    token_type: string,
+    scope: string,
 }

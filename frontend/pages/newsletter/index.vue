@@ -1,29 +1,27 @@
 <template>
-  <section class="dark:bg-gray-900">
-    <div class="grid h-screen place-items-center" v-if="pendingNewsletters">
-      <MainLoader/>
+  <div class="grid h-screen place-items-center" v-if="pendingNewsletters">
+    <MainLoader/>
+  </div>
+  <div class="grid max-w-screen-xl py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12" v-else>
+    <div class="place-self-center lg:col-span-6 mr-3">
+      <NewsletterTable
+          :newsletters="newsletters"
+          @addNewsletterDataToForm="addNewsletterDataToForm"
+          @changeNewsletterFormToAdd="changeNewsletterFormToAdd"
+      />
     </div>
-    <div class="grid max-w-screen-xl py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12" v-else>
-      <div class="place-self-center lg:col-span-6 mr-3">
-        <NewsletterTable
-            :newsletters="newsletters"
-            @addNewsletterDataToForm="addNewsletterDataToForm"
-            @changeNewsletterFormToAdd="changeNewsletterFormToAdd"
-        />
-      </div>
-      <div class="mx-auto place-self-top lg:col-span-6">
-        <NewsletterForm
-            :newsletterData="newsletterData"
-            :newsletterForm="newsletterForm"
-            @newsletterAdd="newsletterAdd"
-            @newsletterEdit="newsletterEdit"
-            @newsletterDelete="newsletterDelete"
-            @newsletterLaunch="newsletterLaunch"
-            @clearForm="changeNewsletterFormToAdd"
-        />
-      </div>
+    <div class="mx-auto place-self-top lg:col-span-6 md:mb-12">
+      <NewsletterForm
+          :newsletterData="newsletterData"
+          :newsletterForm="newsletterForm"
+          @newsletterAdd="newsletterAdd"
+          @newsletterEdit="newsletterEdit"
+          @newsletterDelete="newsletterDelete"
+          @newsletterLaunch="newsletterLaunch"
+          @clearForm="changeNewsletterFormToAdd"
+      />
     </div>
-  </section>
+  </div>
 
 
 </template>

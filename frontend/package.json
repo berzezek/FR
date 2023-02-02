@@ -8,6 +8,7 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.3.1",
     "autoprefixer": "^10.4.13",
     "nuxt": "3.0.0",
     "postcss": "^8.4.20",
@@ -16,6 +17,8 @@
   "dependencies": {
     "@pinia/nuxt": "^0.4.6",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "flowbite": "^1.6.3",
     "loadtest": "^5.2.0",
     "pinia": "^2.0.28"
   }
