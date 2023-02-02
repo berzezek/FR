@@ -2,6 +2,7 @@ from django.utils import timezone
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from ..tasks import send_newsletter_task
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 
 from .serializers import NewsletterSerializer, CustomerSerializer, NewsletterStatisticSerializer, \
     NewsletterStatisticListSerializer

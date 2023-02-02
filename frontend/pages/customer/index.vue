@@ -1,5 +1,4 @@
 <template>
-  <section class="dark:bg-gray-900">
     <div class="grid h-screen place-items-center" v-if="pendingCustomers">
       <MainLoader/>
     </div>
@@ -21,7 +20,6 @@
         />
       </div>
     </div>
-  </section>
 
 
 </template>

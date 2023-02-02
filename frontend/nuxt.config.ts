@@ -1,9 +1,7 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
     runtimeConfig: {
-        public: {
-            BASE_API_URL: process.env.BASE_API_URL || 'http://localhost:8000/api/v1/',
-        }
+        public: {}
     },
     css: ['~/assets/css/main.css'],
     postcss: {
@@ -12,14 +10,16 @@ export default defineNuxtConfig({
             autoprefixer: {},
         },
     },
-    modules: ['@pinia/nuxt'],
+    modules: [
+        '@pinia/nuxt',
+        '@nuxtjs/tailwindcss'
+    ],
     vite: {
         server: {
             hmr: {
-                protocol: 'wss',
+                protocol: 'http',
                 // port: 8000
             }
         },
     },
-
 })

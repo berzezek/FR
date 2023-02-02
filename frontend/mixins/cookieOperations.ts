@@ -16,3 +16,7 @@ export const getCookie = (name: string): string | undefined => {
   }
   return undefined;
 }
+
+export const eraseCookie = (name: string) => {
+    document.cookie = name+'=; Max-Age=-99999999;';
+}

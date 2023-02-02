@@ -1,55 +1,75 @@
 <template>
-  <div class="max-w-screen-xl mx-auto lg:gap-12 xl:gap-0 lg:py-16 lg:grid-cols-12 mb-16">
-    <form @submit.prevent>
-      <div class="mb-6">
-        <label for="login" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your login</label>
-        <input type="text" id="login"
-               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-               v-model="user.username"
-               placeholder="name@fr.com" required>
+  <div class="z-50 w-full p-4 overflow-y-auto md:inset-0 h-modal md:h-full">
+    <div class="relative w-full h-full max-w-md md:h-auto">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div class="px-6 py-6 lg:px-8">
+          <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white text-center">
+            {{ props.isRegister ? 'Регистрация' : 'Вход' }}
+          </h3>
+
+          <form class="space-y-6" @submit.prevent="sendFormData">
+            <div>
+              <label for="login" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Ваш логин</label>
+              <input type="text" name="username" id="username"
+                     v-model="user.username"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                     placeholder="Ваш логин" required>
+            </div>
+            <div>
+              <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Ваш пароль</label>
+              <input type="password" name="password" id="password" placeholder="••••••••"
+                     v-model="user.password"
+                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                     required>
+            </div>
+            <button type="submit"
+                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              {{ props.isRegister ? 'Зарегистрироваться' : 'Войти' }}
+            </button>
+            <button type="submit"
+                    class="w-full text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">
+              OAUTH2.0
+            </button>
+            <div
+                class="text-sm font-medium text-primary-500 dark:text-primary-300"
+                @click="switchForm"
+            >
+              {{ props.isRegister ? 'Уже есть аккаунт?' : 'Нет аккаунта?' }}
+            </div>
+          </form>
+
+        </div>
       </div>
-      <div class="mb-6">
-        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-        <input type="password" id="password"
-               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-               v-model="user.password"
-               required>
-      </div>
-      <button @click="loginUser"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Submit
-      </button>
-      <button @click="oauthLogin"
-              class="ml-3 text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800">
-        OAuth
-      </button>
-    </form>
+    </div>
   </div>
 
 </template>
 
 <script setup>
 
-import {useUserStore} from "~/stores/login";
+const props = defineProps({
+  isRegister: {
+    type: Boolean,
+    default: false
+  }
+})
 
-const router = useRouter();
+const user = ref({
+  username: '',
+  password: ''
+})
 
-const user = ref(
-    {
-      username: 'berzezek',
-      password: 'alpine12',
-    }
-)
-
-const userStore = useUserStore();
-const loginUser = async () => {
-  await userStore.loginUser(user.value);
-  await userStore.fetchUser()
-  await router.push('/newsletter')
+const emit = defineEmits(['sendFormData', 'switchForm'])
+const sendFormData = () => {
+  emit('sendFormData', user, props.isRegister)
 }
-const oauthLogin = async () => {
-  await userStore.loginOauth(user.value);
+const switchForm = () => {
+  emit('switchForm')
 }
+
 </script>
 
 <style scoped>
